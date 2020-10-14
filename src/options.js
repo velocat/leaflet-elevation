@@ -75,6 +75,7 @@ export var Options = {
 	slope: false,
 	speed: false,
 	sLimit: undefined,
+	sMovMin: undefined,
 	time: false,
 	timeFactor: 3600,
 	timeFormat: false,
