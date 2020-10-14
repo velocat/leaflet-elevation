@@ -215,8 +215,8 @@ Elevation.addInitHook(function() {
 			.append("minspeed", L._("Min Speed: "), Math.round(this.track_info.speed_min) + '&nbsp;' + speed.label)
 			.append("maxspeed", L._("Max Speed: "), Math.round(this.track_info.speed_max) + '&nbsp;' + speed.label)
 			.append("avgspeed", L._("Avg Speed: "), Math.round(this.track_info.speed_avg) + '&nbsp;' + speed.label)
-			.append("movspeed", L._("Avg Movie Speed: "), Math.round(this.track_info.speed_mov) + '&nbsp;' + speed.label);
-			.append("movtime", L._("Movie Time: "), new Date(this.track_info.time_mov).toLocaleDateString());
+			.append("movspeed", L._("Avg Movie Speed: "), Math.round(this.track_info.speed_mov) + '&nbsp;' + speed.label)
+			.append("movtime", L._("Movie Time: "), new Date(this.track_info.time_mov).toLocaleDateString())
 			.append("stoptime", L._("Stop Time: "), new Date(this.track_info.time_stop).toLocaleDateString());
 	});
 
