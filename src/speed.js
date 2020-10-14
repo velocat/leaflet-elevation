@@ -117,6 +117,9 @@ Elevation.addInitHook(function() {
 		let sMax = this._maxSpeed || 0; // Speed Max
 		let sMin = this._minSpeed || 0; // Speed Min
 		let sAvg = this._avgSpeed || 0; // Speed Avg
+		let sMovAvg = this._movSpeed || 0; // Speed Avg Movie
+		let sMovTime = this._movTime || 0; // Movie Time
+		let sStopTime = this._stopTime || 0; // Stop Time
 		let speed = 0;
 
 		if (deltaT > 0) {
@@ -149,12 +152,26 @@ Elevation.addInitHook(function() {
 		sMax = speed > sMax ? speed : sMax;
 		sMin = speed < sMin ? speed : sMin;
 		sAvg = (speed + sAvg) / 2.0;
+		
+		if(this.options.sMovMin){
+			if(speed > this.options.sMovMin){
+				sMovAvg = (speed + sMovAvg) / 2.0;
+				sMovTime = sMovTime + deltaT;
+			}else{
+				sStopTime = sStopTime + deltaT;
+			}
+		}else{
+			sMovTime = sMovTime + deltaT;
+		}
 
 		data[i].speed = speed;
 
 		this.track_info.speed_max = this._maxSpeed = sMax;
 		this.track_info.speed_min = this._minSpeed = sMin;
 		this.track_info.speed_avg = this._avgSpeed = sAvg;
+		this.track_info.speed_mov = this._movSpeed = sMovAvg;
+		this.track_info.time_stop = this._stopTime = sStopTime;
+		this.track_info.time_mov = this._movTime = sMovTime;
 	});
 
 	this.on("elechart_change", function(e) {
@@ -197,12 +214,18 @@ Elevation.addInitHook(function() {
 		this._summary
 			.append("minspeed", L._("Min Speed: "), Math.round(this.track_info.speed_min) + '&nbsp;' + speed.label)
 			.append("maxspeed", L._("Max Speed: "), Math.round(this.track_info.speed_max) + '&nbsp;' + speed.label)
-			.append("avgspeed", L._("Avg Speed: "), Math.round(this.track_info.speed_avg) + '&nbsp;' + speed.label);
+			.append("avgspeed", L._("Avg Speed: "), Math.round(this.track_info.speed_avg) + '&nbsp;' + speed.label)
+			.append("movspeed", L._("Avg Movie Speed: "), Math.round(this.track_info.speed_mov) + '&nbsp;' + speed.label);
+			.append("movtime", L._("Movie Time: "), new Date(this.track_info.time_mov).toLocaleDateString());
+			.append("stoptime", L._("Stop Time: "), new Date(this.track_info.time_stop).toLocaleDateString());
 	});
 
 	this.on("eledata_clear", function() {
 		this._maxSpeed = null;
 		this._minSpeed = null;
+		this._movSpeed = null;
+		this._stopTime = null;
+		this._movTime  = null;
 	});
 
 });
