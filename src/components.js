@@ -342,3 +342,21 @@ export const Bisect = ({
 		.bisector(d => d[attr])
 		.left(data, scale.invert(x));
 };
+
+export const AxisG({
+	axis,
+	height,
+	width
+}) => {	
+	return g => {
+		let [w, h] = [0, 0];
+		if (position == "bottom") h = height;
+		if (position == "right") w = width;
+		
+		axisG = g.append("g")
+			.attr("transform", "translate(" + w + "," + h + ")")
+			.call(axis);
+		return axisG;
+	};		
+};
+
