@@ -24,6 +24,24 @@ export var Chart = L.Class.extend({
 		this._yTicks = opts.yTicks;
 
 		let scale = this._updateScale();
+		this._x = scale.x;
+		this._y = scale.y;
+		
+		this.zoomed = function zoomed() {
+			// Update Puth .....
+			// ??
+			
+			this._x.range(this._x2.range().map(function(d) {
+				return d3.event.transform.applyX(d);
+			}))
+			this._updateAxis();			
+		}
+		
+		let D3zoom = d3.zoom()
+			.scaleExtent([1, 10])
+			//.extent([[this.options.margins.left, 0], [this.options.width - this.options.margin.right, this.options.height]])
+			// .translateExtent([[this.options.margins.left, -Infinity], [this.options.width - this.options.margin.right, Infinity]])
+			.on("zoom", this.zoomed.bind(this));
 
 		let svg = this._container = d3.create("svg")
 			.attr("class", "background")
@@ -37,7 +55,9 @@ export var Chart = L.Class.extend({
 			.call(this._appendArea())
 			.call(this._appendAxis())
 			.call(this._appendFocusable())
-			.call(this._appendLegend());
+			.call(this._appendLegend())
+			.call(this._appendAxisG())
+			.call(D3zoom, this);
 
 		this._grid = svg.select('.grid');
 		this._area = svg.select('.area');
@@ -46,9 +66,6 @@ export var Chart = L.Class.extend({
 		this._focus = svg.select('.focus');
 		this._focusRect = this._focus.select('rect');
 		this._legend = svg.select('.legend');
-		this._x = scale.x;
-		this._y = scale.y;
-
 	},
 
 	update: function(props) {
@@ -182,6 +199,17 @@ export var Chart = L.Class.extend({
 		return g =>
 			g.append("g")
 			.attr("class", "axis")
+			.call(this._appendXaxis())
+			.call(this._appendYaxis());
+	},
+	
+	/**
+       	* Generate "axisG".
+       	*/
+	_appendAxisG: function() {
+ 	       return g =>  
+	       		g.append("g")
+		       	.attr("class", "axisG")
 			.call(this._appendXaxis())
 			.call(this._appendYaxis());
 	},
